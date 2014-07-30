@@ -16,54 +16,68 @@
 #include <TView.h>
 #include <TError.h>
 #include <TCanvas.h>
-#include <TStopwatch.h>
 #define PI 3.14159265
 
-void dijetbalance()	{
-  TStopwatch timer;
-  timer.Start();
+void dijetbalancemc()	{
   for (int filecounter = 0; filecounter < 5; filecounter ++) { //FILE LOOP	
 	
 	//OPEN FILE
     if (filecounter == 0) {
-      TFile *pt = TFile::Open("/afs/cern.ch/work/a/aparikh/public/PP2013_HiForest_PromptReco_JSon_Jet40Jet60_ppTrack_forestv84.root"); // 40 TO 80 PT AVERAGE
-      if (pt->IsOpen()) pt->ls();
-      TFile *balanceout = new TFile("balanceout1234.root", "recreate"); // 40 TO 60 PT AVERAGE
+      TFile *pt = TFile::Open("/afs/cern.ch/user/a/aparikh/CMSSW_5_3_8_HI_patch2/src/WORK/pt30_pp2013_P01_prod22_v81_merged_forest_0.root"); // 40 TO 60 PT AVERAGE
+      TFile *balancemcout = new TFile("balancemcout1234.root", "recreate"); // 40 TO 60 PT AVERAGE
       cout << "File 1 Opened Successfully" << endl;
     }
     if (filecounter == 1) {
-      TFile *pt = TFile::Open("/afs/cern.ch/work/a/aparikh/public/PP2013_HiForest_PromptReco_JSon_Jet40Jet60_ppTrack_forestv84.root"); // 40 TO 80 PT AVERAGE
-      if (pt->IsOpen()) pt->ls();
-      TFile *balanceout = new TFile("balanceout123.root", "recreate"); // 60 TO 80 PT AVERAGE
+      TFile *pt = TFile::Open("/afs/cern.ch/user/g/gpikul/work/public/pt50_pp2013_P01_prod22_v81_merged_forest_0.root"); // 60 TO 80 PT AVERAGE
+      TFile *balancemcout = new TFile("balancemcout123.root", "recreate"); // 60 TO 80 PT AVERAGE
       cout << "File 2 Opened Successfully" << endl;
     }
     if (filecounter == 2) {
-      TFile *pt = TFile::Open("/afs/cern.ch/work/a/aparikh/public/PP2013_HiForest_PromptReco_JsonPP_Jet80_PPReco_forestv82.root"); //80 TO 200 PT AVERAGE
-      if (pt->IsOpen()) pt->ls();
-      TFile *balanceout = new TFile("balanceout1.root", "recreate"); // 80 TO 100 PT AVERAGE
+      TFile *pt = TFile::Open("/afs/cern.ch/user/g/gpikul/work/public/pt80_pp2013_P01_prod22_v81_merged_forest_0.root"); // 80 TO 140 PT AVERAGE
+      TFile *balancemcout = new TFile("balancemcouta.root", "recreate"); // 80 to 100 PT AVERAGE
       cout << "File 3 Opened Successfully" << endl;
     }
     if (filecounter == 3) {
-      TFile *pt = TFile::Open("/afs/cern.ch/work/a/aparikh/public/PP2013_HiForest_PromptReco_JsonPP_Jet80_PPReco_forestv82.root"); //80 TO 200 PT AVERAGE
-      if (pt->IsOpen()) pt->ls();
-      TFile *balanceout = new TFile("balanceout.root", "recreate"); // 100 TO 140 PT AVERAGE
+      TFile *pt = TFile::Open("/afs/cern.ch/user/g/gpikul/work/public/pt80_pp2013_P01_prod22_v81_merged_forest_0.root"); // 80 TO 140 PT AVERAGE
+      TFile *balancemcout = new TFile("balancemcout.root", "recreate"); // 100 TO 140 PT AVERAGE
       cout << "File 4 Opened Successfully" << endl;
     }
     if (filecounter == 4) {
-      TFile *pt = TFile::Open("/afs/cern.ch/work/a/aparikh/public/PP2013_HiForest_PromptReco_JsonPP_Jet80_PPReco_forestv82.root"); //80 TO 200 PT AVERAGE
-      if (pt->IsOpen()) pt->ls();
-      TFile *balanceout = new TFile("balanceout12.root", "recreate"); // 140 TO 200 PT AVERAGE
+      TFile *pt = TFile::Open("/afs/cern.ch/user/g/gpikul/work/public/pt120_pp2013_P01_prod22_v81_merged_forest_0.root"); // 140 TO 200 PT AVERAGE
+      TFile *balancemcout = new TFile("balancemcout12.root", "recreate"); // 140 TO 200 PT AVERAGE
       cout << "File 5 Opened Successfully" << endl;
-    }  
+    }
+
 	printf("About to open tree.\n");
 
 	//OPEN NECESSARY TREE
+	//TTree *ak3t = (TTree *)pt->Get("akPu3PFJetAnalyzer/t");
 	TTree *ak3t = (TTree *)pt->Get("ak3PFJetAnalyzer/t");
 	TTree* skimt = (TTree *)pt->Get("skimanalysis/HltTree");
 	TTree* hitree = (TTree *)pt->Get("hiEvtAnalyzer/HiTree");
 	TTree* hcal = (TTree *)pt->Get("hcalNoise/t");
-	TTree* hltanalysis = (TTree *)pt->Get("hltanalysis/HltTree");
+	//TTree* hltanalysis = (TTree *)pt->Get("hltanalysis/t");
 
+  //OUTPUT TREE VARIABLES
+  Float_t myptprobe = 0;
+  Float_t myptref = 0;
+  Float_t myetaprobe = 0;
+  Float_t myetaref = 0;
+  Float_t myb = 0;
+  Float_t myweight = 1;
+  Float_t myjtpt = 0;
+
+  //INITIALIZING NEW TREE AND DECLARING BRANCHES
+  TTree* rrmc = new TTree("rrmc", "rrmc");
+  rrmc->Branch("myptprobe", &myptprobe, "myptprobe/F");
+  rrmc->Branch("myptref", &myptref, "myptref/F");
+  rrmc->Branch("myetaprobe", &myetaprobe, "myetaprobe/F");
+  rrmc->Branch("myetaref", &myetaref, "myetaref/F");
+  rrmc->Branch("myb", &myb, "myb/F");
+  rrmc->Branch("myweight", &myweight, "myweight/F");
+  rrmc->Branch("myjtpt", &myjtpt, "myjtpt/F");
+  
+  Bool_t test = 0;
 	//INITIALIZING VARIABLES AND ARRAYS	
 	Int_t nref = 0;
 	Float_t j_pt[1000];
@@ -75,9 +89,7 @@ void dijetbalance()	{
 	Int_t pHBHENoiseFilter;
 	Int_t pPAcollisionEventSelectionPA;
 	Int_t phiEcalRecHitSpikeFilter;
-	Int_t HLT_PAJet40_NoJetID_v1; // 40 TO 60 PT AVERAGE
-	Int_t HLT_PAJet60_NoJetID_v1; // 60 TO 80 PT AVERAGE
-	Int_t HLT_PAJet80_NoJetID_v1; // 80 TO 200 PT AVERAGE
+	//Int_t HLT_PAJet80_NoJetID_v1;
 	Float_t vz = 0;
 
 	Float_t j_array_pt[1000];
@@ -106,9 +118,7 @@ void dijetbalance()	{
 	skimt->SetBranchAddress("pPAcollisionEventSelectionPA",&pPAcollisionEventSelectionPA);
 	skimt->SetBranchAddress("phiEcalRecHitSpikeFilter",&phiEcalRecHitSpikeFilter);
 	hitree->SetBranchAddress("vz", &vz);
-	if (filecounter == 0) hltanalysis->SetBranchAddress("HLT_PAJet40_NoJetID_v1", &HLT_PAJet40_NoJetID_v1); // 40 TO 60 PT AVERAGE
-	if (filecounter == 1) hltanalysis->SetBranchAddress("HLT_PAJet60_NoJetID_v1", &HLT_PAJet60_NoJetID_v1); // 60 TO 80 PT AVERAGE
-	if (filecounter == 2 || filecounter == 3 || filecounter == 4) hltanalysis->SetBranchAddress("HLT_PAJet80_NoJetID_v1", &HLT_PAJet80_NoJetID_v1); // 80 TO 200 PT AVERAGE
+	//hltanalysis->SetBrachAddress("HLT_PAJet80_NoJetID_v1", &HLT_PAJet80_NoJetID_v1);
 
 //	TH2F *pt0dphi = new TH2F("pt0dphi", "pt[0] vs dphi; Delta Phi; pt[0]", 64, 0, 3.2, 500, 0, 500);
 //	TH2F *ptidphi = new TH2F("ptidphi", "pt[i] vs dphi; Delta Phi; pt[i]", 64, 0, 3.2, 500, 0, 500);
@@ -135,19 +145,7 @@ void dijetbalance()	{
 		ak3t->GetEntry(i);
 		skimt->GetEntry(i);
 		hitree->GetEntry(i);
-		hltanalysis->GetEntry(i);
 			if(pPAcollisionEventSelectionPA==0 || fabs(vz)>15 || pHBHENoiseFilter==0  || phiEcalRecHitSpikeFilter ==0) continue;
-      
-			if (filecounter == 0) {
-			  if(HLT_PAJet40_NoJetID_v1==0) continue; // 40 TO 60 PT AVERAGE
-			}
-			if (filecounter == 1) {
-			  if(HLT_PAJet60_NoJetID_v1==0) continue; // 60 TO 80 PT AVERAGE
-			}
-			if (filecounter == 2 || filecounter == 3 || filecounter == 4) {
-			  if(HLT_PAJet80_NoJetID_v1==0) continue; // 80 TO 200 PT AVERAGE
-			}
-
     Float_t dijetbalanceparameter = 0;
     Float_t referencept = 0;
     Float_t probept = 0;
@@ -156,13 +154,23 @@ void dijetbalance()	{
     Float_t refeta = 0;
     Float_t probeeta = 0;
     Int_t k = 0;
-						
-			
-		//hvz->Fill(vz);
-	
-
+    
+    if (filecounter == 0) {
+      if (j_pt[0] > 30) myjtpt = j_pt[0]; //FILLS LEADING JET MOMENTUM VARIABLE    40 TO 60 PT AVERAGE
+    }
+    if (filecounter == 1) {
+      if (j_pt[0] > 50) myjtpt = j_pt[0]; //FILLS LEADING JET MOMENTUM VARIABLE    60 TO 80 PT AVERAGE 
+    }
+    if (filecounter == 2 || filecounter == 3) {
+      if(j_pt[0] > 80) myjtpt = j_pt[0]; //FILLS LEADING JET MOMENTUM VARIABLE   80 TO 140 PT AVERAGE 
+    }
+    if (filecounter == 4) {
+      if (j_pt[0] > 120) myjtpt = j_pt[0]; //FILLS LEADING JET MOMENTUM VARIABLE   140 TO 200 PT AVERAGE
+    }
+		
 		//pteta->Fill(j_eta[0], j_pt[0]);
 		//ptetacut->Fill(j_array_eta[0], j_array_pt[0]);
+
 
 	          for (int z=0; z < 999; z++) { //INITIALIZING ARRAYS 
                   	j_array_pt[z] = 0;
@@ -181,6 +189,7 @@ void dijetbalance()	{
 		}
 
 //cout<<"  my array size "<<k<<" nref jets "<<nref<<endl;
+
 for (int ii = 0; ii < k; ii++)   {
     if (j_array_eta[ii] > -1.3 && j_array_eta[ii] < 1.3)  {
       if (j_array_pt[ii] > referencept) {
@@ -201,14 +210,18 @@ for (int ii = 0; ii < k; ii++)   {
              probeeta = j_array_eta[1];
           }
 }
-}
+} 
+
+
 //cout<<" the reference pt is  "<<referencept<<endl;
   //      cout<<" the probe pt is  "<<probept<<endl;
         
 
 //if (referencept == probept) continue;
 Float_t alpha = 2*j_array_pt[2]/(j_array_pt[0] + j_array_pt[1]);
+
 //cout << "Leading Momentum is " << j_array_pt[0] << " Subleading Momentum is " << j_array_pt[1] << " Third Jet Momentum is " << j_array_pt[2] << " and alpha is " << alpha << endl;
+
 if (alpha > 0.2) continue;
 if(referencept == probept && probept != 0)  cout<< "There is a problem!    "<<probept<<" and " << k<<endl;
 if (referencept == 0 || probept == 0) continue;     
@@ -218,21 +231,27 @@ Float_t averagept = (probept + referencept)/2;
    if (averagept < 40 || averagept > 60) continue; // 40 TO 60 PT AVERAGE
  }
  if (filecounter == 1) {
-   if (averagept < 60 || averagept > 80) continue; // 60 TO 80 PT AVERAGE
+   if (averagept < 60 || averagept > 80) continue; // 60 TO 80 PT AVERAGE 
  }
  if (filecounter == 2) {
    if (averagept < 80 || averagept > 100) continue; // 80 TO 100 PT AVERAGE
  }
  if (filecounter == 3) {
-   if (averagept < 100 || averagept > 140) continue; // 100 TO 140 PT AVERAGE
+  if (averagept < 100 || averagept > 140) continue; // 100 TO 140 PT AVERAGE 
  }
  if (filecounter == 4) {
-   if (averagept < 140 || averagept > 200) continue; // 140 TO 200 PT AVERAGE
+  if (averagept < 140 || averagept > 200) continue; // 140 TO 200 PT AVERAGE
  }
 
 Float_t deltaphi = (probephi - referencephi);
 if (fabs(deltaphi) < 2.5) continue;
 dijetbalanceparameter = 2*(probept - referencept)/(probept + referencept);
+//AFTER ALL THE CUTS ARE MADE THE PARAMETERS ARE STORED INTO THE VARAIBLES THAT THE NEW TREE IS ASSIGNED
+myb = dijetbalanceparameter;
+myptref = referencept;
+myptprobe = probept;
+myetaprobe = probeeta;
+myetaref = refeta;
 //cout << "My B value is " << dijetbalanceparameter << endl;
 if (probeeta < -1.3 || probeeta > 1.3) {
 outereta->Fill(dijetbalanceparameter);
@@ -247,10 +266,20 @@ Int_t v2 = v1%2;
    if (v2 == 1) {
    //cout <<"   "<<endl;
     dijetbalanceparameter = 2*(probept - referencept)/(probept + referencept);
+    myb = dijetbalanceparameter;
+    myptref = referencept;
+    myptprobe = probept;
+    myetaprobe = probeeta;
+    myetaref = refeta;
     //cout <<"My B value is "<< dijetbalanceparameter << endl;
     }
     else  {
       dijetbalanceparameter = 2*(referencept - probept)/(probept + referencept);
+      myb = dijetbalanceparameter;
+      myptref = probept;
+      myptprobe = referencept;
+      myetaprobe = refeta;
+      myetaref = probeeta;
       //cout <<"My B value is "<< dijetbalanceparameter << endl;
     }
 innereta->Fill(dijetbalanceparameter);
@@ -261,29 +290,12 @@ balance->Fill(dijetbalanceparameter);
 //balancerebin->Fill(dijetbalanceparameter);
 
 //}
-	//	entriespt0->Fill(j_array_pt[0], nref);
 
-		//for (int j =1; j < k; j++) { //DPHI CALCULATION AND FILLS HISTOGRAMS 
-			//dphi = j_array_phi[j]-j_array_phi[0];
-			  //	if (dphi>PI)
-			    //		dphi = 2*PI - dphi;
-		//	  	if (dphi<-PI)
-			//    		dphi = 2*PI + dphi;
-			 //dphi = fabs(dphi);
-			 //printf("%f \n", dphi); //prints dphi values
-			 //printf("%f \n", nref);
-
-			  //pt0dphi->Fill(dphi, j_array_pt[0]);
-			  //ptidphi->Fill(dphi, j_array_pt[j]);
-			  //ptipt0->Fill(j_array_pt[j], j_array_pt[0]);
-			  //pteta->Fill(j_eta[j], j_pt[j]);
-			  //ptetacut->Fill(j_array_eta[j], j_array_pt[j]);
+        rrmc->Fill(); //FILLS TREES WITH EACH EVENT PARAMETER
 		}
 	//}
   //b[count]
 //for loop, get lower and upper bound, integrate and write that into an array, average the bounds and set that into another array, plot them using TGraph
-
-
 
 Double_t scale = 1/balance->Integral();
 Double_t scaleinner = 1/innereta->Integral();
@@ -310,18 +322,15 @@ bouter->cd();
 outereta->Draw();
 
 
-balanceout->cd();
+balancemcout->cd();
 balance->Write();
 innereta->Write();
 outereta->Write();
 //balancerebin->Write();
 //inneretarebin->Write();
 //outeretarebin->Write();
-balanceout->Close();
-pt->Close();
+balancemcout->Write();
+balancemcout->Close();
+
 }
-timer.Stop();
-cout << "End of Macro Reached" << endl;
-cout << "CPU Time (min)  : " << timer.CpuTime() << endl;
-cout << "Real Time (min) : " << timer.RealTime() << endl;
 } //END FILE LOOP

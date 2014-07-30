@@ -20,9 +20,12 @@
 #include <TMultiGraph.h>
 #include <TLegend.h>
 #include <TLatex.h>
+#include <TStopwatch.h>
 #define PI 3.14159265
 
 void overlayingmc() {
+  TStopwatch timer;
+  timer.Start();
   for (int filecounter = 0; filecounter < 5; filecounter++) { //FILE LOOP
     if (filecounter == 0) {
       TFile *montecarlo = new TFile("rebinoutmc1234.root", "Read"); // 40 TO 60 PT AVERAGE
@@ -174,4 +177,8 @@ myfile->Close();
 montecarlo->Close();
 ppdata->Close();
   }//END FILE LOOP
+  timer.Stop();
+  cout << "End of Macro Reached" << endl;
+  cout << "CPU Time (min)  : " << timer.CpuTime() << endl;
+  cout << "Real Time (min) : " << timer.RealTime() << endl;
 }

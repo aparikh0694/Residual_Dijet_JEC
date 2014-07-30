@@ -17,9 +17,12 @@
 #include <TError.h>
 #include <TCanvas.h>
 #include <TGraph.h>
+#include <TStopwatch.h>
 #define PI 3.14159265
 
 void rebinmacromc() {
+  TStopwatch timer;
+  timer.Start();
   for (int filecounter = 0; filecounter < 5; filecounter++) { //FILE LOOP
     if (filecounter == 0) {
       TFile *MyFile1 = new TFile("balancemcout1234.root", "Read"); // 40 TO 60 PT AVERAGE
@@ -189,4 +192,8 @@ outeretarebinmc->Draw("ACPF");
   if (filecounter == 0 || filecounter == 1 || filecounter == 3 || filecounter == 4) MyFile2->Close();
 
   }//END FILE LOOP
+  timer.Stop();
+  cout << "End of Macro Reached" << endl;
+  cout << "CPU Time (min)  : " << timer.CpuTime() << endl;
+  cout << "Real Time (min) : " << timer.RealTime() << endl;
 }

@@ -16,53 +16,63 @@
 #include <TView.h>
 #include <TError.h>
 #include <TCanvas.h>
-#include <TStopwatch.h>
 #define PI 3.14159265
 
-void dijetbalance()	{
-  TStopwatch timer;
-  timer.Start();
-  for (int filecounter = 0; filecounter < 5; filecounter ++) { //FILE LOOP	
+void dijetbalancerelresp()	{
+  for (int filecounter = 0; filecounter < 5; filecounter++) { //FILE LOOP	
 	
 	//OPEN FILE
     if (filecounter == 0) {
       TFile *pt = TFile::Open("/afs/cern.ch/work/a/aparikh/public/PP2013_HiForest_PromptReco_JSon_Jet40Jet60_ppTrack_forestv84.root"); // 40 TO 80 PT AVERAGE
-      if (pt->IsOpen()) pt->ls();
-      TFile *balanceout = new TFile("balanceout1234.root", "recreate"); // 40 TO 60 PT AVERAGE
+      TFile *outf = new TFile("outputrelresp1234.root", "recreate"); // 40 TO 60 PT AVERAGE
       cout << "File 1 Opened Successfully" << endl;
     }
     if (filecounter == 1) {
       TFile *pt = TFile::Open("/afs/cern.ch/work/a/aparikh/public/PP2013_HiForest_PromptReco_JSon_Jet40Jet60_ppTrack_forestv84.root"); // 40 TO 80 PT AVERAGE
-      if (pt->IsOpen()) pt->ls();
-      TFile *balanceout = new TFile("balanceout123.root", "recreate"); // 60 TO 80 PT AVERAGE
+      TFile *outf = new TFile("outputrelresp123.root", "recreate"); // 60 TO 80 PT AVERAGE
       cout << "File 2 Opened Successfully" << endl;
     }
     if (filecounter == 2) {
-      TFile *pt = TFile::Open("/afs/cern.ch/work/a/aparikh/public/PP2013_HiForest_PromptReco_JsonPP_Jet80_PPReco_forestv82.root"); //80 TO 200 PT AVERAGE
-      if (pt->IsOpen()) pt->ls();
-      TFile *balanceout = new TFile("balanceout1.root", "recreate"); // 80 TO 100 PT AVERAGE
+      TFile *pt = TFile::Open("/afs/cern.ch/work/a/aparikh/public/PP2013_HiForest_PromptReco_JsonPP_Jet80_PPReco_forestv82.root"); // 80 TO 200 PT AVERAGE
+      TFile *outf = new TFile("outputrelresp1.root", "recreate"); // 80 TO 100 PT AVERAGE
       cout << "File 3 Opened Successfully" << endl;
     }
     if (filecounter == 3) {
-      TFile *pt = TFile::Open("/afs/cern.ch/work/a/aparikh/public/PP2013_HiForest_PromptReco_JsonPP_Jet80_PPReco_forestv82.root"); //80 TO 200 PT AVERAGE
-      if (pt->IsOpen()) pt->ls();
-      TFile *balanceout = new TFile("balanceout.root", "recreate"); // 100 TO 140 PT AVERAGE
+      TFile *pt = TFile::Open("/afs/cern.ch/work/a/aparikh/public/PP2013_HiForest_PromptReco_JsonPP_Jet80_PPReco_forestv82.root"); // 80 TO 200 PT AVERAGE
+      TFile *outf = new TFile("outputrelresp.root", "recreate"); // 100 TO 140 PT AVERAGE
       cout << "File 4 Opened Successfully" << endl;
     }
     if (filecounter == 4) {
-      TFile *pt = TFile::Open("/afs/cern.ch/work/a/aparikh/public/PP2013_HiForest_PromptReco_JsonPP_Jet80_PPReco_forestv82.root"); //80 TO 200 PT AVERAGE
-      if (pt->IsOpen()) pt->ls();
-      TFile *balanceout = new TFile("balanceout12.root", "recreate"); // 140 TO 200 PT AVERAGE
+      TFile *pt = TFile::Open("/afs/cern.ch/work/a/aparikh/public/PP2013_HiForest_PromptReco_JsonPP_Jet80_PPReco_forestv82.root"); // 80 TO 200 PT AVERAGE
+      TFile *outf = new TFile("outputrelresp12.root", "recreate"); // 140 TO 200 PT AVERAGE
       cout << "File 5 Opened Successfully" << endl;
-    }  
+    }
+  
+ 
 	printf("About to open tree.\n");
 
 	//OPEN NECESSARY TREE
+	//TTree *ak3t = (TTree *)pt->Get("akPu3PFJetAnalyzer/t");
 	TTree *ak3t = (TTree *)pt->Get("ak3PFJetAnalyzer/t");
 	TTree* skimt = (TTree *)pt->Get("skimanalysis/HltTree");
 	TTree* hitree = (TTree *)pt->Get("hiEvtAnalyzer/HiTree");
 	TTree* hcal = (TTree *)pt->Get("hcalNoise/t");
 	TTree* hltanalysis = (TTree *)pt->Get("hltanalysis/HltTree");
+
+  //DEFINE ARRAYS AND VARIABLES NEEDED FOR THE OUTPUT TTREE
+  Float_t myptprobe = 0;
+  Float_t myptref = 0;
+  Float_t myetaprobe = 0;
+  Float_t myb = 0;
+  Float_t myetaref = 0;
+
+  //DEFINE THE BRANCHES OF THE OUTPUT TTREE
+  TTree* rr = new TTree("rr", "rr");
+  rr->Branch("myptprobe", &myptprobe, "myptprobe/F");
+  rr->Branch("myptref", &myptref, "myptref/F");
+  rr->Branch("myetaprobe", &myetaprobe, "myetaprobe/F");
+  rr->Branch("myb", &myb, "myb/F");
+  rr->Branch("myetaref", &myetaref, "myetaref/F");
 
 	//INITIALIZING VARIABLES AND ARRAYS	
 	Int_t nref = 0;
@@ -96,8 +106,6 @@ void dijetbalance()	{
 	//int k = 0;
 	
 	ak3t->SetMakeClass(1);
-	//ak3t->AddFriend("skimTree=skimanalysis/HltTree");
-	//ak3t->AddFriend("hiTree=hiEvtAnalyzer/HiTree");
 	ak3t->SetBranchAddress("jtpt", j_pt);
 	ak3t->SetBranchAddress("nref", &nref);
 	ak3t->SetBranchAddress("jtphi", j_phi);
@@ -128,7 +136,6 @@ void dijetbalance()	{
   //TH1* outeretarebin = new TH1D("outereta rebin", "Dijet Balance; Dijet Balance; Event Fraction", 82, xcoordinate);
   //TH1* inneretarebin = new TH1D("innereta rebin", "Dijet Balance; Dijet Balance; Event Fraction", 82, xcoordinate);
   int nEvents = ak3t->GetEntries();
-  cout << nEvents << endl;
 	//nEvents = 1000;
 	for (int i = 0; i < nEvents; i++) { //GETS EVENTS	
 			
@@ -136,17 +143,17 @@ void dijetbalance()	{
 		skimt->GetEntry(i);
 		hitree->GetEntry(i);
 		hltanalysis->GetEntry(i);
-			if(pPAcollisionEventSelectionPA==0 || fabs(vz)>15 || pHBHENoiseFilter==0  || phiEcalRecHitSpikeFilter ==0) continue;
-      
-			if (filecounter == 0) {
-			  if(HLT_PAJet40_NoJetID_v1==0) continue; // 40 TO 60 PT AVERAGE
-			}
-			if (filecounter == 1) {
-			  if(HLT_PAJet60_NoJetID_v1==0) continue; // 60 TO 80 PT AVERAGE
-			}
-			if (filecounter == 2 || filecounter == 3 || filecounter == 4) {
-			  if(HLT_PAJet80_NoJetID_v1==0) continue; // 80 TO 200 PT AVERAGE
-			}
+		if(pPAcollisionEventSelectionPA==0 || fabs(vz)>15 || pHBHENoiseFilter==0  || phiEcalRecHitSpikeFilter ==0) continue;
+          
+		if (filecounter == 0) {
+		   if(HLT_PAJet40_NoJetID_v1==0) continue; // 40 TO 60 PT AVERAGE
+		}
+		if (filecounter == 1) {
+		   if(HLT_PAJet60_NoJetID_v1==0) continue; // 60 TO 80 PT AVERAGE
+		}
+		if (filecounter == 2 || filecounter == 3 || filecounter == 4) {
+		   if(HLT_PAJet80_NoJetID_v1==0) continue; // 80 TO 200 PT AVERAGE
+		}
 
     Float_t dijetbalanceparameter = 0;
     Float_t referencept = 0;
@@ -156,10 +163,7 @@ void dijetbalance()	{
     Float_t refeta = 0;
     Float_t probeeta = 0;
     Int_t k = 0;
-						
-			
-		//hvz->Fill(vz);
-	
+		
 
 		//pteta->Fill(j_eta[0], j_pt[0]);
 		//ptetacut->Fill(j_array_eta[0], j_array_pt[0]);
@@ -168,6 +172,10 @@ void dijetbalance()	{
                   	j_array_pt[z] = 0;
                   	j_array_phi[z] = 0;
                   	j_array_eta[z] = 0;
+                    //myptref[z] = 0;
+                    //myptprobe[z] = 0;
+                    //myetaprobe[z] = 0;
+                    //myb[z] = 0;
         	  }
 
 		for (int  n = 0; n < nref; n++) { //APPLYING CUTS AND FILLS NEW ARRAY 
@@ -188,17 +196,26 @@ for (int ii = 0; ii < k; ii++)   {
         referencephi = j_array_phi[ii];
         refeta = j_array_eta[ii];
 
+
+        //myptref = refeta;
       }
             if (j_array_pt[0]!=referencept) {
             probept = j_array_pt[0];
             probephi = j_array_phi[0];
-
             probeeta = j_array_eta[0];
+
+
+            //myetaprobe = probeeta;
+            //myptprobe = probept;
           }
           else {
             probept = j_array_pt[1];
             probephi = j_array_phi[1];
-             probeeta = j_array_eta[1];
+            probeeta = j_array_eta[1];
+
+
+            //myetaprobe = probeeta;
+            //myptprobe = probept;
           }
 }
 }
@@ -233,6 +250,12 @@ Float_t averagept = (probept + referencept)/2;
 Float_t deltaphi = (probephi - referencephi);
 if (fabs(deltaphi) < 2.5) continue;
 dijetbalanceparameter = 2*(probept - referencept)/(probept + referencept);
+//AFTER ALL THE CUTS ARE MADE, THE PARAMETERS ARE STORED INTO THE VARIABLES THAT THE NEW TREE IS ASSIGNED
+myb = dijetbalanceparameter;
+myptref = referencept;
+myptprobe = probept;
+myetaprobe = probeeta;
+myetaref = refeta;
 //cout << "My B value is " << dijetbalanceparameter << endl;
 if (probeeta < -1.3 || probeeta > 1.3) {
 outereta->Fill(dijetbalanceparameter);
@@ -247,10 +270,21 @@ Int_t v2 = v1%2;
    if (v2 == 1) {
    //cout <<"   "<<endl;
     dijetbalanceparameter = 2*(probept - referencept)/(probept + referencept);
+    myb = dijetbalanceparameter;
+    myptref = referencept;
+    myptprobe = probept;
+    myetaprobe = probeeta;
+    myetaref = refeta;
     //cout <<"My B value is "<< dijetbalanceparameter << endl;
     }
     else  {
       dijetbalanceparameter = 2*(referencept - probept)/(probept + referencept);
+      //STORES DIJET BALANCE PARAMETER TO THE NEW TREE, SWITCHES REFERENCE PT, PROBE PT AND PROBE ETA TO PROBE PT, REFERENCE PT AND REFERENCE ETA SINCE IT ARBITRARILY SELECTS ONE JET TO BE THE REFERENCE AND ONE JET TO BE THE PROBE
+      myb = dijetbalanceparameter;
+      myptref = probept;
+      myptprobe = referencept;
+      myetaprobe = refeta;
+      myetaref = probeeta;
       //cout <<"My B value is "<< dijetbalanceparameter << endl;
     }
 innereta->Fill(dijetbalanceparameter);
@@ -260,29 +294,9 @@ innereta->Fill(dijetbalanceparameter);
 balance->Fill(dijetbalanceparameter); 
 //balancerebin->Fill(dijetbalanceparameter);
 
-//}
-	//	entriespt0->Fill(j_array_pt[0], nref);
 
-		//for (int j =1; j < k; j++) { //DPHI CALCULATION AND FILLS HISTOGRAMS 
-			//dphi = j_array_phi[j]-j_array_phi[0];
-			  //	if (dphi>PI)
-			    //		dphi = 2*PI - dphi;
-		//	  	if (dphi<-PI)
-			//    		dphi = 2*PI + dphi;
-			 //dphi = fabs(dphi);
-			 //printf("%f \n", dphi); //prints dphi values
-			 //printf("%f \n", nref);
-
-			  //pt0dphi->Fill(dphi, j_array_pt[0]);
-			  //ptidphi->Fill(dphi, j_array_pt[j]);
-			  //ptipt0->Fill(j_array_pt[j], j_array_pt[0]);
-			  //pteta->Fill(j_eta[j], j_pt[j]);
-			  //ptetacut->Fill(j_array_eta[j], j_array_pt[j]);
-		}
-	//}
-  //b[count]
-//for loop, get lower and upper bound, integrate and write that into an array, average the bounds and set that into another array, plot them using TGraph
-
+		rr->Fill(); //FILLS TREES WITH EACH EVENT PARAMETER
+    }
 
 
 Double_t scale = 1/balance->Integral();
@@ -310,18 +324,12 @@ bouter->cd();
 outereta->Draw();
 
 
-balanceout->cd();
+//balanceout->cd();
 balance->Write();
 innereta->Write();
 outereta->Write();
-//balancerebin->Write();
-//inneretarebin->Write();
-//outeretarebin->Write();
-balanceout->Close();
-pt->Close();
+outf->Write(); //WRITES TREES AND HISTOGRAMS TO FILE
+outf->Close();
 }
-timer.Stop();
-cout << "End of Macro Reached" << endl;
-cout << "CPU Time (min)  : " << timer.CpuTime() << endl;
-cout << "Real Time (min) : " << timer.RealTime() << endl;
+
 } //END FILE LOOP

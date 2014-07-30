@@ -4,12 +4,18 @@
 #include <stdio.h>
 #include <TF1.h>
 #include <TLegend.h>
+#include <TStopwatch.h>
 
 void compare_ntuple() {
 
 ///////////////////////////////////////////////////////////
 // THIS PROGRAM COMPARES AN NTUPLE WITH BOTH DATA FILES //
 //////////////////////////////////////////////////////////
+
+TStopwatch timer;
+timer.Start(); 
+
+
 //TFile *newfile = new TFile("compare_ntuple.root", "Recreate");
 //DIMENSIONING NEW VARIABLES
 Float_t j_pt[1000];
@@ -89,4 +95,9 @@ ak3tb->Project("htest_forestb","photonMax","abs(vz)<15&&pPAcollisionEventSelecti
 jet80->Project("htest_ntupleb","photonMax","abs(jteta)<2&&hlt40d&&jtpt>50");
 htest_forestb->Print("base");
 htest_ntupleb->Print("base");
+
+timer.Stop();
+cout << "End of Macro Reached" << endl;
+cout << "CPU Time (min)  : " << timer.CpuTime() << endl;
+cout << "Real Time (min) : " << timer.RealTime() << endl;
 }

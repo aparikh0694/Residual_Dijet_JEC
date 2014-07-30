@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <TF1.h>
 #include <TLegend.h>
+#include <TStopwatch.h>
 
 void comparison() {
 
@@ -14,6 +15,11 @@ void comparison() {
 /////////////////////////////////////////////////////////////////////////////////
 //                         HLT40 TRIGGER ALONE                                 //
 /////////////////////////////////////////////////////////////////////////////////
+
+TStopwatch timer;
+timer.Start();
+
+
 TFile *newfile = new TFile("comparison.root", "Recreate");
 //DIMENSIONING NEW VARIABLES
 Float_t j_pt[1000];
@@ -629,4 +635,9 @@ histc9->Write();
 histc10->Write();
 histc11->Write();
 newfile->Close();
+
+timer.Stop();
+cout << "End of Macro Reached" << endl;
+cout << "CPU Time (min)  : " << timer.CpuTime() << endl;
+cout << "Real Time (min) : " << timer.RealTime() << endl;
 }

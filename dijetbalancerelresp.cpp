@@ -16,9 +16,12 @@
 #include <TView.h>
 #include <TError.h>
 #include <TCanvas.h>
+#include <TStopwatch.h>
 #define PI 3.14159265
 
 void dijetbalancerelresp()	{
+  TStopwatch timer;
+  timer.Start();
   for (int filecounter = 0; filecounter < 5; filecounter++) { //FILE LOOP	
 	
 	//OPEN FILE
@@ -337,5 +340,8 @@ outf->Write(); //WRITES TREES AND HISTOGRAMS TO FILE
 outf->Close();
 pt->Close();
 }
-
+timer.Stop();
+cout << "End of Macro Reached" << endl;
+cout << "CPU Time (min)  : " << timer.CpuTime() << endl;
+cout << "Real Time (min) : " << timer.RealTime() << endl;
 } //END FILE LOOP

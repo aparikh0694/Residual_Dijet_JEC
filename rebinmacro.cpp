@@ -17,9 +17,12 @@
 #include <TError.h>
 #include <TCanvas.h>
 #include <TGraph.h>
+#include <TStopwatch.h>
 #define PI 3.14159265
 
 void rebinmacro() {
+  TStopwatch timer;
+  timer.Start();
   for (int filecounter = 0; filecounter < 5; filecounter++) { //FILE LOOP
     if (filecounter == 0) {
       TFile *MyFile = new TFile("balanceout1234.root", "Read"); // 40 TO 60 PT AVERAGE
@@ -147,4 +150,8 @@ outeretarebin->Draw("ACP");
   MyFile->Close();
 
 }
+timer.Stop();
+cout << "End of Macro Reached" << endl;
+cout << "CPU Time (min)  : " << timer.CpuTime() << endl;
+cout << "Real Time (min) : " << timer.RealTime() << endl;
 } //END FILE LOOP

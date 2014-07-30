@@ -4,12 +4,17 @@
 #include <stdio.h>
 #include <TF1.h>
 #include <TLegend.h>
+#include <TStopwatch.h>
 
 void make_ntuple() {
 
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
 // THIS PROGRAM CREATES AN NTUPLE WITH BOTH DATA FILES AND APPLIES BOTH ADITYA'S AND DOGA'S JEC CORRECTIONS  //
 ///////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+TStopwatch timer;
+timer.Start();
+
 
 TFile *newfile = new TFile("pp2013JEC_ak3PF.root", "Recreate");
 //DIMENSIONING NEW VARIABLES
@@ -394,5 +399,10 @@ newfile->Write();
 
 newfile->Close();
 
+
+timer.Stop();
+cout << "End of Macro Reached" << endl;
+cout << "CPU Time (min)  : " << timer.CpuTime() << endl;
+cout << "Real Time (min) : " << timer.RealTime() << endl;
 }
 

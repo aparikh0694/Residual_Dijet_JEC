@@ -2,12 +2,16 @@
 #include <TH1.h>
 #include <iomanip>
 #include <stdio.h>
+#include <TStopwatch.h>
 
 void eta_dep_corr() {
 
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
 // THIS PROGRAM TAKES ETA SLICES OF THE B_{J} VALUE, FINDS THE AVERAGE AND PLOTS IT AS A FUNCTION OF PT//
 /////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+TStopwatch timer;
+timer.Start();
 
 
 TFile *newfile = new TFile("eta_corr.root", "Recreate");
@@ -609,4 +613,9 @@ for (int abc = 0; abc < 5; abc++) {
   cout << "---------------------------------------------------------------------------------------------------------------------------------------" << endl;
  }
 cout << endl << endl;
+
+timer.Stop();
+cout << "End of Macro Reached" << endl;
+cout << "CPU Time (min)  : " << timer.CpuTime() << endl;
+cout << "Real Time (min) : " << timer.RealTime() << endl;
 }

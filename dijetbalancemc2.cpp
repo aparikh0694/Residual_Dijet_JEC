@@ -26,9 +26,12 @@
 #include <TSystem.h>
 #include <stdlib.h>
 #include <TFileMerger.h>
+#include <TStopwatch.h>
 #define PI 3.14159265
 
 void dijetbalancemc2()	{
+  TStopwatch timer;
+  timer.Start();
   for (int filecounter = 0; filecounter < 4; filecounter++) { //FILE LOOP	
 	
 	//OPEN FILE
@@ -348,4 +351,8 @@ balancemcout2->Close();
 pt->Close();
 
 }
+timer.Stop();
+cout << "End of Macro Reached" << endl;
+cout << "CPU Time (min)  : " << timer.CpuTime() << endl;
+cout << "Real Time (min) : " << timer.RealTime() << endl;
 } //END FILE LOOP

@@ -18,9 +18,12 @@
 #include <TCanvas.h>
 #include <TGraph.h>
 #include <TGraphErrors.h>
+#include <TStopwatch.h>
 #define PI 3.14159265
 
 void relativeresponsemc() {
+  TStopwatch timer;
+  timer.Start();
 Float_t bin_edge_y[] = { -1.5, -1.44, -1.38, -1.32, -1.26, -1.20, -1.14, -1.08, -1.02, -0.96, -0.9, -0.84, -0.78, -0.72, -0.66, -0.6, -0.54, -0.48, -0.42, -0.36, -0.3, -0.24, -0.18, -0.12, -0.06, 0, 0.06, 0.12, 0.18, 0.24, 0.3, 0.36, 0.42, 0.48, 0.54, 0.6, 0.66, 0.72, 0.78, 0.84, 0.9, 0.96, 1.02, 1.08, 1.14, 1.2, 1.26, 1.32, 1.38, 1.44, 1.5};
 Int_t bins_y = sizeof(bin_edge_y)/sizeof(Float_t) -1;
 cout << bins_y << endl;
@@ -173,4 +176,8 @@ b->Write();
 relresp->Close();
 a->Close();
   }//END FILE LOOP
+  timer.Stop();
+  cout << "End of Macro Reached" << endl;
+  cout << "CPU Time (min)  : " << timer.CpuTime() << endl;
+  cout << "Real Time (min) : " << timer.RealTime() << endl;
 }
