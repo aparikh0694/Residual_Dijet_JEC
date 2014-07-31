@@ -25,8 +25,8 @@
 #define PI 3.14159265
 
 void relativeresponsept() {
-TStopwatch timer;
-timer.Start();
+  TStopwatch timer;
+  timer.Start();
 
   TFile *montecarlo1 = new TFile("relativeresponsemc.root", "Read"); // 100 TO 140 PT AVERAGE
   TFile *montecarlo2 = new TFile("relativeresponsemc1.root", "Read"); // 80 TO 100 PT AVERAGE
@@ -240,35 +240,35 @@ timer.Start();
   d->Update();
 
 
-myfile->cd();
-a->Write();
-b->Write();
-c->Write();
-d->Write();
-myfile->Close();
-montecarlo1->Close();
-montecarlo2->Close();
-montecarlo3->Close();
-montecarlo4->Close();
-montecarlo5->Close();
-ppdata1->Close();
-ppdata2->Close();
-ppdata3->Close();
-ppdata4->Close();
-ppdata5->Close();
-corr1->Close();
-corr2->Close();
-corr3->Close();
-corr4->Close();
-corr5->Close();
-casym1->Close();
-casym2->Close();
-casym3->Close();
-casym4->Close();
-casym5->Close();
+  myfile->cd();
+  a->Write();
+  b->Write();
+  c->Write();
+  d->Write();
+  myfile->Close();
+  montecarlo1->Close();
+  montecarlo2->Close();
+  montecarlo3->Close();
+  montecarlo4->Close();
+  montecarlo5->Close();
+  ppdata1->Close();
+  ppdata2->Close();
+  ppdata3->Close();
+  ppdata4->Close();
+  ppdata5->Close();
+  corr1->Close();
+  corr2->Close();
+  corr3->Close();
+  corr4->Close();
+  corr5->Close();
+  casym1->Close();
+  casym2->Close();
+  casym3->Close();
+  casym4->Close();
+  casym5->Close();
 
-timer.Stop();
-cout << "End of Macro Reached" << endl;
-cout << "CPU Time (min)  : " << timer.CpuTime() << endl;
-cout << "Real Time (min) : " << timer.Real Time() << endl;
+  timer.Stop();
+  cout << "End of Macro Reached" << endl;
+  cout << "CPU Time (min)  : " << timer.CpuTime() << endl;
+  cout << "Real Time (min) : " << timer.Real Time() << endl;
 }
