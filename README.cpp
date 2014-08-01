@@ -1,3 +1,5 @@
+THE RADII BEING EVALUATED IS SET IN HEADER.H. CHANGE IT IN THAT FILE AND INCLUDE IT IN ALL THE MACROS FOR THAT TO PROPAGATE THROUGH.
+
 Run dijetbalancerelresp.cpp
 This file calculates the dijet balance parameter from the pp2013 data and stores values to my tree which I create and store in outputrelresp.root
 

@@ -1,65 +1,47 @@
-#include <math.h>
-#include <TMath.h>
-#include <TTree.h>
-#include <TROOT.h>
-#include <TFile.h>
-#include <TH1.h>
-#include <TH2.h>
-#include <TRandom.h>
-#include <cstdlib>
-#include <iostream>
-#include <fstream>
-#include <TAxis.h>
-#include <TVirtualPad.h>
-#include <TVirtualX.h>
-#include <TStyle.h>
-#include <TView.h>
-#include <TError.h>
-#include <TCanvas.h>
-#include <TStopwatch.h>
-#define PI 3.14159265
+#include "header.h"
 
 void dijetbalance()	{
   TStopwatch timer;
   timer.Start();
-  for (int radius_counter = 1; radius_counter <= 7; radius_counter++) { //RADIUS LOOP
+  for (int radius_counter = 0; radius_counter < number_of_radii; radius_counter++) { //RADIUS LOOP
+    radius = radius_array[radius_counter];
     for (int filecounter = 0; filecounter < 5; filecounter ++) { //FILE LOOP	
 	
       //OPEN FILE
       if (filecounter == 0) {
 	TFile *pt = TFile::Open("/afs/cern.ch/work/a/aparikh/public/PP2013_HiForest_PromptReco_JSon_Jet40Jet60_ppTrack_forestv84.root"); // 40 TO 80 PT AVERAGE
 	if (pt->IsOpen()) pt->ls();
-	TFile *balanceout = new TFile(Form("ak%iPFJetAnalyzer/balanceout1234.root",radius_counter), "recreate"); // 40 TO 60 PT AVERAGE
+	TFile *balanceout = new TFile(Form("ak%iPFJetAnalyzer/balanceout1234.root",radius), "recreate"); // 40 TO 60 PT AVERAGE
 	cout << "File 1 Opened Successfully" << endl;
       }
       if (filecounter == 1) {
 	TFile *pt = TFile::Open("/afs/cern.ch/work/a/aparikh/public/PP2013_HiForest_PromptReco_JSon_Jet40Jet60_ppTrack_forestv84.root"); // 40 TO 80 PT AVERAGE
 	if (pt->IsOpen()) pt->ls();
-	TFile *balanceout = new TFile(Form("ak%iPFJetAnalyzer/balanceout123.root",radius_counter), "recreate"); // 60 TO 80 PT AVERAGE
+	TFile *balanceout = new TFile(Form("ak%iPFJetAnalyzer/balanceout123.root",radius), "recreate"); // 60 TO 80 PT AVERAGE
 	cout << "File 2 Opened Successfully" << endl;
       }
       if (filecounter == 2) {
 	TFile *pt = TFile::Open("/afs/cern.ch/work/a/aparikh/public/PP2013_HiForest_PromptReco_JsonPP_Jet80_PPReco_forestv82.root"); //80 TO 200 PT AVERAGE
 	if (pt->IsOpen()) pt->ls();
-	TFile *balanceout = new TFile(Form("ak%iPFJetAnalyzer/balanceout1.root",radius_counter), "recreate"); // 80 TO 100 PT AVERAGE
+	TFile *balanceout = new TFile(Form("ak%iPFJetAnalyzer/balanceout1.root",radius), "recreate"); // 80 TO 100 PT AVERAGE
 	cout << "File 3 Opened Successfully" << endl;
       }
       if (filecounter == 3) {
 	TFile *pt = TFile::Open("/afs/cern.ch/work/a/aparikh/public/PP2013_HiForest_PromptReco_JsonPP_Jet80_PPReco_forestv82.root"); //80 TO 200 PT AVERAGE
 	if (pt->IsOpen()) pt->ls();
-	TFile *balanceout = new TFile(Form("ak%iPFJetAnalyzer/balanceout.root",radius_counter), "recreate"); // 100 TO 140 PT AVERAGE
+	TFile *balanceout = new TFile(Form("ak%iPFJetAnalyzer/balanceout.root",radius), "recreate"); // 100 TO 140 PT AVERAGE
 	cout << "File 4 Opened Successfully" << endl;
       }
       if (filecounter == 4) {
 	TFile *pt = TFile::Open("/afs/cern.ch/work/a/aparikh/public/PP2013_HiForest_PromptReco_JsonPP_Jet80_PPReco_forestv82.root"); //80 TO 200 PT AVERAGE
 	if (pt->IsOpen()) pt->ls();
-	TFile *balanceout = new TFile(Form("ak%iPFJetAnalyzer/balanceout12.root",radius_counter), "recreate"); // 140 TO 200 PT AVERAGE
+	TFile *balanceout = new TFile(Form("ak%iPFJetAnalyzer/balanceout12.root",radius), "recreate"); // 140 TO 200 PT AVERAGE
 	cout << "File 5 Opened Successfully" << endl;
       }  
       printf("About to open tree.\n");
 
       //OPEN NECESSARY TREE
-      TTree *ak3t = (TTree *)pt->Get(Form("ak%iPFJetAnalyzer/t",radius_counter));
+      TTree *ak3t = (TTree *)pt->Get(Form("ak%iPFJetAnalyzer/t",radius));
       TTree* skimt = (TTree *)pt->Get("skimanalysis/HltTree");
       TTree* hitree = (TTree *)pt->Get("hiEvtAnalyzer/HiTree");
       TTree* hcal = (TTree *)pt->Get("hcalNoise/t");
@@ -118,9 +100,9 @@ void dijetbalance()	{
       //	TH2F *ptetacut = new TH2F("ptetacut", "pt vs eta; eta; pt", 50, -6, 6, 500, 0, 500);
       //	TH2F *entriespt0 = new TH2F("entriespt0", "# of entries vs pt[0]; pt[0]; # of entries", 500, 0, 500, 15, 0, 15);
       //TH1F *hvz = new TH1F("hvz", "# of entries vs vz; vz; # of entries", 200, -200, 200);
-      TH1F *balance = new TH1F("balance", Form("Dijet Balance Radius = 0.%i; Dijet Balance; Event Fraction",radius_counter), 1000, -3, 3); //REGULAR BINNING
-      TH1F *outereta = new TH1F("outereta", Form("Dijet Balance Radius = 0.%i; Dijet Balance; Event Fraction",radius_counter), 1000, -3, 3); //REGULAR BINNING
-      TH1F *innereta = new TH1F("innereta", Form("Dijet Balance Radius = 0.%i; Dijet Balance; Event Fraction",radius_counter), 1000, -3, 3); //REGULAR BINNING
+      TH1F *balance = new TH1F("balance", Form("Dijet Balance Radius = 0.%i; Dijet Balance; Event Fraction",radius), 1000, -3, 3); //REGULAR BINNING
+      TH1F *outereta = new TH1F("outereta", Form("Dijet Balance Radius = 0.%i; Dijet Balance; Event Fraction",radius), 1000, -3, 3); //REGULAR BINNING
+      TH1F *innereta = new TH1F("innereta", Form("Dijet Balance Radius = 0.%i; Dijet Balance; Event Fraction",radius), 1000, -3, 3); //REGULAR BINNING
       //fParent = 0;
       //const Int_t NBINS = 82;
       //Float_t edges[84] = {-5.191, -4.889, -4.716, -4.538, -4.363, -4.191, -4.013, -3.839, -3.664, -3.489, -3.314, -3.139, -2.964, -2.853, -2.650, -2.500, -2.322, -2.172, -2.043, -1.930, -1.830, -1.740, -1.653, -1.566, -1.479, -1.392, -1.305, -1.218, -1.131, -1.044, -0.957, -0.879, -0.783, -0.696, -0.609, -0.522, -0.435, -0.348, -0.261, -0.174, -0.087, 0.000, 0.087, 0.174, 0.261, 0.348, 0.435, 0.522, 0.609, 0.696, 0.783, 0.879, 0.957, 1.044, 1.131, 1.218, 1.305, 1.392, 1.479, 1.566, 1.653, 1.740, 1.830, 1.930, 2.043, 2.172, 2.322, 2.500, 2.650, 2,853, 2.964, 3.139, 3.314, 3.489, 3.664, 3.839, 4.013, 4.191, 4.363, 4.538, 4.716, 4.889, 5.191}; //CMS HCAL EDGE PSEUDORAPIDITY
@@ -129,7 +111,7 @@ void dijetbalance()	{
       //TH1* outeretarebin = new TH1D("outereta rebin", "Dijet Balance; Dijet Balance; Event Fraction", 82, xcoordinate);
       //TH1* inneretarebin = new TH1D("innereta rebin", "Dijet Balance; Dijet Balance; Event Fraction", 82, xcoordinate);
       int nEvents = ak3t->GetEntries();
-      cout << "Radius = " << radius_counter << endl;
+      cout << "Radius = " << radius << endl;
       cout << nEvents << endl;
       //nEvents = 1000;
       for (int i = 0; i < nEvents; i++) { //GETS EVENTS	
