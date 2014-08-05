@@ -1,10 +1,4 @@
 #include "header.h"
-#include <TH1.h>
-#include <iomanip>
-#include <stdio.h>
-#include <TF1.h>
-#include <TLegend.h>
-#include <TStopwatch.h>
 
 void compare_ntuple() {
 
@@ -54,8 +48,11 @@ void compare_ntuple() {
   Int_t hlt60 = 0;
   Int_t hlt40 = 0;
 
+  for (int radius_counter = 0; radius_counter < number_of_radii; radius_counter++) { //RADIUS LOOP
+    radius = radius_array[radius_counter];
+    cout << "Radius = " << radius << endl;
   TFile *c = TFile::Open("/afs/cern.ch/work/a/aparikh/public/PP2013_HiForest_PromptReco_JSon_Jet40Jet60_ppTrack_forestv84.root");
-  TTree *ak3t = (TTree *)c->Get("ak3PFJetAnalyzer/t");
+  TTree *ak3t = (TTree *)c->Get(Form("ak%iPFJetAnalyzer/t",radius));
   TTree *hlt = (TTree *)c->Get("hltanalysis/HltTree");
   TTree *skimt = (TTree *)c->Get("skimanalysis/HltTree");
   TTree *hitree = (TTree *)c->Get("hiEvtAnalyzer/HiTree");
@@ -65,7 +62,7 @@ void compare_ntuple() {
   float entries = ak3t->GetEntries("abs(vz)<15&&pPAcollisionEventSelectionPA&&pHBHENoiseFilter&&abs(jteta)<2&&HLT_PAJet40_NoJetID_v1&&jtpt>50");
   cout << "Forest Entries = " << entries <<endl;
   TFile *d = TFile::Open("pp2013JEC_ak3PF.root");
-  TTree *jet40jet60 = (TTree *)d->Get("jet40jet60");
+  TTree *jet40jet60 = (TTree *)d->Get("jet40jet60");//NAME OF NEW TREE IN ITERATIVE STRUCTURE
   float nentries = jet40jet60->GetEntries("abs(jteta)<2&&hlt40&&jtpt>50");
   cout << "NTuple Entries = " << nentries <<endl;
   TH1F* htest_ntuple = new TH1F("htest_ntuple","",1000,0,1000);
@@ -76,7 +73,7 @@ void compare_ntuple() {
   htest_ntuple->Print("base");
 
   TFile *b = TFile::Open("/afs/cern.ch/work/a/aparikh/public/PP2013_HiForest_PromptReco_JsonPP_Jet80_PPReco_forestv82.root");
-  TTree *ak3tb = (TTree *)b->Get("ak3PFJetAnalyzer/t");
+  TTree *ak3tb = (TTree *)b->Get(Form("ak%iPFJetAnalyzer/t",radius));
   TTree *hltb = (TTree *)b->Get("hltanalysis/HltTree");
   TTree *skimtb = (TTree *)b->Get("skimanalysis/HltTree");
   TTree *hitreeb = (TTree *)b->Get("hiEvtAnalyzer/HiTree");
@@ -86,7 +83,7 @@ void compare_ntuple() {
   float entriesb = ak3tb->GetEntries("abs(vz)<15&&pPAcollisionEventSelectionPA&&pHBHENoiseFilter&&abs(jteta)<2&&HLT_PAJet40_NoJetID_v1&&jtpt>50");
   cout << "JET 80 TREE" << endl;
   cout << "Forest Entries = " << entriesb <<endl;
-  TTree *jet80 = (TTree *)d->Get("jet80");
+  TTree *jet80 = (TTree *)d->Get("jet80");//NAME OF TREE IN ITERATIVE STRUCTURE
   float nentriesb = jet80->GetEntries("abs(jteta)<2&&hlt40d&&jtpt>50");
   cout << "NTuple Entries = " << nentriesb <<endl;
   TH1F* htest_ntupleb = new TH1F("htest_ntupleb","",1000,0,1000);
@@ -95,7 +92,8 @@ void compare_ntuple() {
   jet80->Project("htest_ntupleb","photonMax","abs(jteta)<2&&hlt40d&&jtpt>50");
   htest_forestb->Print("base");
   htest_ntupleb->Print("base");
-
+  cout << endl << endl << endl << endl << endl << endl << endl << endl
+  } //END RADIUS LOOP
   timer.Stop();
   cout << "End of Macro Reached" << endl;
   cout << "CPU Time (min)  : " << timer.CpuTime() << endl;

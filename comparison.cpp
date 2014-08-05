@@ -1,10 +1,4 @@
 #include "header.h"
-#include <TH1.h>
-#include <iomanip>
-#include <stdio.h>
-#include <TF1.h>
-#include <TLegend.h>
-#include <TStopwatch.h>
 
 void comparison() {
 
@@ -18,9 +12,8 @@ void comparison() {
 
   TStopwatch timer;
   timer.Start();
-
-
-  TFile *newfile = new TFile("comparison.root", "Recreate");
+  //DOGA HAS CORRECTIONS ONLY DERIVED FOR R = 0.3 SO NO NEED TO NEST THIS IN A RADIUS LOOP
+  TFile *newfile = new TFile("ak3PFJetAnalyzer/comparison.root", "Recreate");
   //DIMENSIONING NEW VARIABLES
   Float_t j_pt[1000];
   Int_t nref = 0;
@@ -41,7 +34,7 @@ void comparison() {
   Int_t hlt60 = 0;
   Int_t hlt40 = 0;
 
-  float abseta = 0;//THSI TFILE OPEN MIGHT HAVE TO CHANGE DEPENDING ON THE CONE SIZE USED???
+  float abseta = 0;//THIS TFILE OPEN MIGHT HAVE TO CHANGE DEPENDING ON THE CONE SIZE USED???
   TFile *etacorr = TFile::Open("/afs/cern.ch/user/a/aparikh/CMSSW_5_3_8_HI_patch2/src/Residual_Dijet_JEC_Analysis/Casym_pp_double_hcalbins_algo_ak3PF_pt100_140_jet80_alphahigh_20_phicut250.root");
   TH1D *c_eta = (TH1D*)etacorr->Get("C_asym");
   float bins = c_eta->GetNbinsX();
@@ -635,7 +628,6 @@ void comparison() {
   histc10->Write();
   histc11->Write();
   newfile->Close();
-
   timer.Stop();
   cout << "End of Macro Reached" << endl;
   cout << "CPU Time (min)  : " << timer.CpuTime() << endl;

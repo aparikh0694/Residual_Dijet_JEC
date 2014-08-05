@@ -3,6 +3,7 @@
 #include <TTree.h>
 #include <TROOT.h>
 #include <TFile.h>
+#include <TF1.h>
 #include <TH1.h>
 #include <TH2.h>
 #include <TRandom.h>
