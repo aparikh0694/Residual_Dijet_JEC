@@ -43,12 +43,16 @@ Makes separated plots of each of the relative responses for MC, data, etc and st
 
 Run comparison.cpp
 This compares Doga's fit functions with Aditya's fit functions.
+NOTE: Doga only has them derived for R = 0.3 so no need to compare for other radii.
 
 Run make_ntuple.cpp
 This makes an ntuple and applies both Aditya's and Doga's correction factors.
 
 Run compare_ntuple.C
 This compares my ntuple with the data
+
+Run ntuple_maker.cpp
+This macro derives the residual JEC, applies them and makes an ntuple and compares ntuple with data. Effectively combines eta_dep_corr.cpp, make_ntpule.cpp and compare_ntuple.C
 
 EVERYTIME THIS ANALYSIS IS RUN THE NAME OF THE OUTPUT ROOT FILES SHOULD BE CHANGED SO THAT YOU DON'T OVERWRITE ANY RECORDS FROM PREVIOUS ANALYSES
 MAKE SURE THE PATHS ARE SET CORRECTLY
