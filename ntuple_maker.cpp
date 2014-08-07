@@ -10,7 +10,13 @@ void ntuple_maker() {
   timer.Start();
 
 
-  TFile *newfile = new TFile("eta_corr.root", "Recreate");
+  TFile *newfile = new TFile("ResJEC_Functions.root", "Recreate"); //CHANGED OUTPUT FILE NAME
+  //DIMENSIONING PARAMETER ARRAY FOR USE IN THE NTUPLE BEING MADE LATER IN THE MACRO
+  Int_t number_of_parameters = 2; //THIS IS THE NUMBER OF PARAMETERS USED IN THE FIT FUNCTIONS
+  Int_t eta_slices = 7; //THIS IS THE NUMBER OF ETA SLICES FOR WHICH THE FUNCTIONS ARE FIT
+  //NUMBER_OF_RADII SET IN THE HEADER FILE
+  Double_t param_array[number_of_radii][eta_slices][number_of_parameters];
+
   //DIMENSIONING NEW ARRAYS
   Float_t rrelb0[5];
   Float_t rrelb1[5];
@@ -399,6 +405,8 @@ void ntuple_maker() {
     f0->SetLineColor(1);
     casympt0->Fit("f0", "R");
 
+    param_array[radius_counter][0][0] = f0->GetParameter(0);
+    param_array[radius_counter][0][1] = f0->GetParameter(1);
 
     TCanvas* canvaspt0 = new TCanvas(1);
     canvaspt0->cd();
@@ -419,6 +427,8 @@ void ntuple_maker() {
     f1->SetLineColor(2);
     casympt1->Fit("f1", "R");
 
+    param_array[radius_counter][1][0] = f1->GetParameter(0);
+    param_array[radius_counter][1][1] = f1->GetParameter(1);
 
     TCanvas* canvaspt1 = new TCanvas(1);
     canvaspt1->cd();
@@ -440,6 +450,8 @@ void ntuple_maker() {
     f2->SetLineColor(3);
     casympt2->Fit("f2", "R");
 
+    param_array[radius_counter][2][0] = f2->GetParameter(0);
+    param_array[radius_counter][2][1] = f2->GetParameter(1);
 
     TCanvas* canvaspt2 = new TCanvas(1);
     canvaspt2->cd();
@@ -461,6 +473,8 @@ void ntuple_maker() {
     f3->SetLineColor(4);
     casympt3->Fit("f3", "R");
 
+    param_array[radius_counter][3][0] = f3->GetParameter(0);
+    param_array[radius_counter][3][1] = f3->GetParameter(1);
 
     TCanvas* canvaspt3 = new TCanvas(1);
     canvaspt3->cd();
@@ -482,6 +496,8 @@ void ntuple_maker() {
     f4->SetLineColor(9);
     casympt4->Fit("f4", "R");
 
+    param_array[radius_counter][4][0] = f4->GetParameter(0);
+    param_array[radius_counter][4][1] = f4->GetParameter(1);
 
     TCanvas* canvaspt4 = new TCanvas(1);
     canvaspt4->cd();
@@ -503,6 +519,8 @@ void ntuple_maker() {
     f5->SetLineColor(6);
     casympt5->Fit("f5", "R");
 
+    param_array[radius_counter][5][0] = f5->GetParameter(0);
+    param_array[radius_counter][5][1] = f5->GetParameter(1);
 
     TCanvas* canvaspt5 = new TCanvas(1);
     canvaspt5->cd();
@@ -524,6 +542,8 @@ void ntuple_maker() {
     f6->SetLineColor(7);
     casympt6->Fit("f6", "R");
 
+    param_array[radius_counter][6][0] = f6->GetParameter(0);
+    param_array[radius_counter][6][1] = f6->GetParameter(1);
 
     TCanvas* canvaspt6 = new TCanvas(1);
     canvaspt6->cd();
@@ -613,8 +633,184 @@ void ntuple_maker() {
     }
     cout << endl << endl;
   }//END RADIUS LOOP
-  timer.Stop();
-  cout << "End of Macro Reached" << endl;
-  cout << "CPU Time (min)  : " << timer.CpuTime() << endl;
-  cout << "Real Time (min) : " << timer.RealTime() << endl;
-}
+
+
+
+
+
+  //MAKING NTUPLE CODE
+  //Double_t param_array[number_of_radii][eta_slices][number_of_parameters];
+
+  //DIMENSIONING NEW VARIABLES
+  Int_t nref = 0;
+  Float_t j_pt[1000];
+  Float_t raw_pt[1000];
+  Float_t j_eta[1000];
+  Float_t j_phi[1000];
+  Float_t chMax[1000];
+  Float_t trkMax[1000];
+  Float_t phMax[1000];
+  Float_t neMax[1000];
+  Float_t chSum[1000];
+  Float_t phSum[1000];
+  Float_t trkSum[1000];
+  Float_t neSum[1000];
+  Int_t evt = 0;
+  Int_t run = 0;
+  Int_t lumi = 0;
+  Float_t vx = 0;
+  Float_t vy = 0;
+  Float_t vz = 0;
+  Int_t ntrk = 0;
+  Int_t pHBHENoiseFilter;
+  Int_t pPAcollisionEventSelectionPA;
+  Int_t phiEcalRecHitSpikeFilter;
+  Int_t hlt80 = 0;
+  Int_t hlt60 = 0;
+  Int_t hlt40 = 0;
+  Float_t corr_pt_ResJEC[1000];
+  float aditya = 0;
+  float a = 0;
+  float b = 0;
+  
+  
+  for (int inf_counter = 0; inf_counter < 2; inf_counter++) { //INPUT FILE LOOP
+    if (inf_counter == 0) {
+      TFile *newfile2 = new TFile("pp2013_HLT40_HLT60_ResJEC.root", "Recreate");
+      TFile *c = TFile::Open("/afs/cern.ch/work/a/aparikh/public/PP2013_HiForest_PromptReco_JSon_Jet40Jet60_ppTrack_forestv84.root");
+    }
+    if (inf_counter == 1) {
+      TFile *newfile2 = new TFile("pp2013_HLT80_ResJEC.root", "Recreate");
+      TFile *c = TFile::Open("/afs/cern.ch/work/a/aparikh/public/PP2013_HiForest_PromptReco_JsonPP_Jet80_PPReco_forestv82.root");
+    }
+    printf ("About to open tree.\n");
+    TTree *hlt = (TTree *)c->Get("hltanalysis/HltTree");
+    TTree *skimt = (TTree *)c->Get("skimanalysis/HltTree");
+    TTree *hitree = (TTree *)c->Get("hiEvtAnalyzer/HiTree");
+    skimt->SetBranchAddress("pHBHENoiseFilter", &pHBHENoiseFilter);
+    skimt->SetBranchAddress("pPAcollisionEventSelectionPA", &pPAcollisionEventSelectionPA);
+    skimt->SetBranchAddress("phiEcalRecHitSpikeFilter", &phiEcalRecHitSpikeFilter);
+    hitree->SetBranchAddress("vz", &vz);
+    hitree->SetBranchAddress("vy", &vy);
+    hitree->SetBranchAddress("vx", &vx);
+    hitree->SetBranchAddress("evt", &evt);
+    hitree->SetBranchAddress("hiNtracks", &ntrk);
+    hlt->SetBranchAddress("HLT_PAJet40_NoJetID_v1", &hlt40);
+    hlt->SetBranchAddress("HLT_PAJet60_NoJetID_v1", &hlt60);
+    hlt->SetBranchAddress("HLT_PAJet80_NoJetID_v1", &hlt80);
+    printf ("Making Event Tree.\n");
+    newfile2->cd();
+    TTree *eventTree = new TTree("event_tree", "event_tree");
+    eventTree->Branch("nref", &nref, "nref/I");
+    eventTree->Branch("pHBHENoiseFilter", &pHBHENoiseFilter, "pHBHENoiseFilter/I");
+    eventTree->Branch("pPAcollisionEventSelectionPA", &pPAcollisionEventSelectionPA, "pPAcollisionEventSelectionPA/I");
+    eventTree->Branch("phiEcalRecHitSpikeFilter", &phiEcalRecHitSpikeFilter, "phiEcalRecHitSpikeFilter/I");
+    eventTree->Branch("vz", &vz, "vz/F");
+    eventTree->Branch("vy", &vy, "vy/F");
+    eventTree->Branch("vx", &vx, "vx/F");
+    eventTree->Branch("evt", &evt, "evt/I");
+    eventTree->Branch("hiNtracks", &ntrk, "ntrk/I");
+    eventTree->Branch("HLT_PAJet40_NoJetID_v1", &hlt40, "hlt40/I");
+    eventTree->Branch("HLT_PAJet60_NoJetID_v1", &hlt60, "hlt60/I");
+    eventTree->Branch("HLT_PAJet80_NoJetID_v1", &hlt80, "hlt80/I");
+
+    int nEvents = hlt->GetEntries();
+    float count40 = 0;
+    float ratio1 = 0;
+    float ratio2 = 0;
+    float ratio3 = 0;
+    float difference = 0;
+    float abseta = 0;
+    cout << nEvents << endl;
+    //nEvents = 100;
+    newfile2->cd();
+    for (int i = 0; i < nEvents; i++) {
+      hlt->GetEntry(i);
+      skimt->GetEntry(i);
+      hitree->GetEntry(i);
+      if (pPAcollisionEventSelectionPA == 0 || fabs(vz) > 15 || pHBHENoiseFilter == 0) continue;
+      if (hlt40 == 0 && hlt60 == 0 && hlt80 == 0) continue;
+  
+
+      for (int radius_counter = 0; radius_counter < number_of_radii; radius_counter++) { //RADIUS LOOP
+	radius = radius_array[radius_counter];
+	cout << "Radius = " << radius << endl;
+ 
+	printf ("About to open tree.\n");
+	TTree *ak3t = (TTree *)c->Get(Form("ak%iPFJetAnalyzer/t",radius));
+	ak3t->SetMakeClass(1);
+	ak3t->SetBranchAddress("jtpt", &j_pt);
+	ak3t->SetBranchAddress("rawpt", &raw_pt);
+	ak3t->SetBranchAddress("jteta", &j_eta);
+	ak3t->SetBranchAddress("jtphi", &j_phi);
+	ak3t->SetBranchAddress("chargedMax", &chMax);
+	ak3t->SetBranchAddress("trackMax", &trkMax);
+	ak3t->SetBranchAddress("photonMax", &phMax);
+	ak3t->SetBranchAddress("neutralMax", &neMax);
+	ak3t->SetBranchAddress("chargedSum", &chSum);
+	ak3t->SetBranchAddress("trackSum", &trkSum);
+	ak3t->SetBranchAddress("neutralSum", &neSum);
+	ak3t->SetBranchAddress("photonSum", &phSum);
+	ak3t->SetBranchAddress("nref", &nref);
+	printf ("Making Jet Tree.\n");
+	TTree *akt = new TTree(Form("ak%iPFJetAnalyzer",radius), Form("ak%iPFJetAnalyzer",radius));
+	akt->Branch("nref", &nref, "nref/I");
+	akt->Branch("corr_pt_ResJEC", &corr_pt_ResJEC, "corr_pt_ResJEC[nref]/F");
+	akt->Branch("jtpt", &j_pt, "j_pt[nref]/F");
+	akt->Branch("rawpt", &raw_pt, "raw_pt[nref]/F");
+	akt->Branch("jteta", &j_eta, "j_eta[nref]/F");
+	akt->Branch("jtphi", &j_phi, "j_phi[nref]/F");
+	akt->Branch("chargedMax", &chMax, "chMax[nref]/F");
+	akt->Branch("trackMax", &trkMax, "trkMax[nref]/F");
+	akt->Branch("photonMax", &phMax, "phMax[nref]/F");
+	akt->Branch("neutralMax", &neMax, "neMax[nref]/F");
+	akt->Branch("chargedSum", &chSum, "chSum[nref]/F");
+	akt->Branch("trackSum", &trkSum, "trkSum[nref]/F");
+	akt->Branch("photonSum", &phSum, "phSum[nref]/F");
+	akt->Branch("neutralSum", &neSum, "neSum[nref]/F"); 
+	ak3t->GetEntry(i);
+  
+	for (int j = 0; j < nref; j++) {
+	  if (j_eta[j] > 3.139 || j_eta[j] < -3.139) continue;
+	  if (j_pt[j] < 40) continue;
+	  //APPLYING ADITYA'S CORRECTION FACTOR
+	  abseta = fabs(j_eta[j]);
+
+	  if (abseta < 0.522) {
+	    a = 0.00172601;
+	    b = -0.0632805;
+	  }
+	  if (abseta > 0.522 && abseta < 1.044) {
+	    a = -0.00172674;
+	    b = -0.229084;
+	  }
+	  if (abseta > 1.044 && abseta < 1.566) {
+	    a = -0.0200690;
+	    b = 0.456207;
+	  }
+	  if (abseta > 1.566 && abseta < 2.043) {
+	    a = -0.117306;
+	    b = 0.269872;
+	  }
+	  if (abseta > 2.043 && abseta < 2.500) {
+	    a = -0.100733;
+	    b = 0.130209;
+	  }
+	  if (abseta > 2.500 && abseta < 3.139) {
+	    a = -6.10816;
+	    b = 0.931953;
+	  }
+	  corr_pt_ResJEC = (1 - a/pow(j_pt[j],b))*j_pt[j];
+	}//END JET LOOP
+	akt->Fill();
+      }//END RADIUS LOOP
+      akt->Write();
+      
+    } //END EVENT LOOP
+  } //END INPUT FILE LOOP
+      timer.Stop();
+      cout << "End of Macro Reached" << endl;
+      cout << "CPU Time (min)  : " << timer.CpuTime() << endl;
+      cout << "Real Time (min) : " << timer.RealTime() << endl;
+}//END OF PROGRAM
+
