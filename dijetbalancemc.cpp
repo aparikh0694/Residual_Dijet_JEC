@@ -9,7 +9,7 @@ void dijetbalancemc()	{
 	
       //OPEN FILE
       if (filecounter == 0) {
-	TFile *pt = TFile::Open("/afs/cern.ch/user/a/aparikh/CMSSW_5_3_8_HI_patch2/src/WORK/pt30_pp2013_P01_prod22_v81_merged_forest_0.root"); // 40 TO 60 PT AVERAGE
+	TFile *pt = TFile::Open("/afs/cern.ch/user/a/aparikh/ResJEC/CMSSW_5_3_8_HI_patch2/src/WORK/pt30_pp2013_P01_prod22_v81_merged_forest_0.root"); // 40 TO 60 PT AVERAGE
 	if (pt->IsOpen()) pt->ls();
 	TFile *balancemcout = new TFile(Form("ak%iPFJetAnalyzer/balancemcout1234.root",radius), "recreate"); // 40 TO 60 PT AVERAGE
 	cout << "File 1 Opened Successfully" << endl;
@@ -130,7 +130,7 @@ void dijetbalancemc()	{
       int nEvents = ak3t->GetEntries();
       cout << "Radius = " << radius << endl;
       cout << nEvents << endl;
-      //nEvents = 1000;
+      nEvents = 10000;
       for (int i = 0; i < nEvents; i++) { //GETS EVENTS	
 			
 	ak3t->GetEntry(i);
@@ -328,6 +328,6 @@ void dijetbalancemc()	{
   } //END RADIUS LOOP
   timer.Stop();
   cout << "End of Macro Reached" << endl;
-  cout << "CPU Time (min)  : " << timer.CpuTime() << endl;
-  cout << "Real Time (min) : " << timer.RealTime() << endl;
+  cout << "CPU Time (sec)  : " << timer.CpuTime() << endl;
+  cout << "Real Time (sec) : " << timer.RealTime() << endl;
 }

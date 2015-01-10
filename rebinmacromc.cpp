@@ -24,7 +24,7 @@ void rebinmacromc() {
 	TFile *rebinfile = new TFile(Form("ak%iPFJetAnalyzer/rebinoutmc1234.root",radius), "Recreate"); // 40 TO 60 PT AVERAGE
       }
       if (filecounter == 1) {
-	TFile *MyFile1 = new TFile(Form("ak%iPFJetAnalyer/balancemcout123.root",radius), "Read"); // 60 TO 80 PT AVERAGE
+	TFile *MyFile1 = new TFile(Form("ak%iPFJetAnalyzer/balancemcout123.root",radius), "Read"); // 60 TO 80 PT AVERAGE
 	if (MyFile1->IsOpen()) printf("File Opened Successfully.\n");
 	gFile = MyFile1;
 	MyFile1->ls();
@@ -178,6 +178,6 @@ void rebinmacromc() {
   }//END RADIUS LOOP
   timer.Stop();
   cout << "End of Macro Reached" << endl;
-  cout << "CPU Time (min)  : " << timer.CpuTime() << endl;
-  cout << "Real Time (min) : " << timer.RealTime() << endl;
+  cout << "CPU Time (sec)  : " << timer.CpuTime() << endl;
+  cout << "Real Time (sec) : " << timer.RealTime() << endl;
 }

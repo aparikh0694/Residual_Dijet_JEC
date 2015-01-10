@@ -59,6 +59,8 @@ void eta_dep_corr() {
   for (int radius_counter = 0; radius_counter < number_of_radii; radius_counter++) { //RADIUS LOOP
     radius = radius_array[radius_counter];
     cout << "Radius = " << radius << endl;
+    TFile *newfile = new TFile(Form("ak%iPFJetAnalyzer/eta_corr.root",radius), "Recreate");
+
     for (filecounter = 0; filecounter < 5; filecounter++) { //FILE LOOP
       cout << filecounter << endl;
       if (filecounter == 0) {
@@ -615,6 +617,6 @@ void eta_dep_corr() {
   }//END RADIUS LOOP
   timer.Stop();
   cout << "End of Macro Reached" << endl;
-  cout << "CPU Time (min)  : " << timer.CpuTime() << endl;
-  cout << "Real Time (min) : " << timer.RealTime() << endl;
+  cout << "CPU Time (sec)  : " << timer.CpuTime() << endl;
+  cout << "Real Time (sec) : " << timer.RealTime() << endl;
 }

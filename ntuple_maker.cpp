@@ -11,9 +11,11 @@ void ntuple_maker() {
 
 
   TFile *newfile = new TFile("ResJEC_Functions.root", "Recreate"); //CHANGED OUTPUT FILE NAME
+
   //DIMENSIONING PARAMETER ARRAY FOR USE IN THE NTUPLE BEING MADE LATER IN THE MACRO
   Int_t number_of_parameters = 2; //THIS IS THE NUMBER OF PARAMETERS USED IN THE FIT FUNCTIONS
   Int_t eta_slices = 7; //THIS IS THE NUMBER OF ETA SLICES FOR WHICH THE FUNCTIONS ARE FIT
+
   //NUMBER_OF_RADII SET IN THE HEADER FILE
   Double_t param_array[number_of_radii][eta_slices][number_of_parameters];
 
@@ -398,9 +400,6 @@ void ntuple_maker() {
     casympt0->GetYaxis()->SetRangeUser(0.7, 1.3);
     casympt0->SetMarkerStyle(6);
     casympt0->SetLineColor(1);
-    /*casympt0->Fit("pol4");
-      TF1 *f0 = casympt0->GetFunction("pol4");*/
-    //TF1 *f0 = new TF1("f0", "[0]+[1]*pow(x,[2])", 40, 180);
     TF1 *f0 = new TF1("f0", "1 - [0]/pow(x,[1])", 40, 180);
     f0->SetLineColor(1);
     casympt0->Fit("f0", "R");
@@ -420,9 +419,6 @@ void ntuple_maker() {
     casympt1->GetYaxis()->SetRangeUser(0.7, 1.3);
     casympt1->SetMarkerStyle(6);
     casympt1->SetLineColor(2);
-    /*casympt1->Fit("pol4");
-      TF1 *f1 = casympt1->GetFunction("pol4");*/
-    //TF1 *f1 = new TF1("f1", "[0]+[1]*pow(x,[2])", 40, 180);
     TF1 *f1 = new TF1("f1", "1 - [0]/pow(x,[1])", 40, 180);
     f1->SetLineColor(2);
     casympt1->Fit("f1", "R");
@@ -443,9 +439,6 @@ void ntuple_maker() {
     casympt2->GetYaxis()->SetRangeUser(0.7, 1.3);
     casympt2->SetMarkerStyle(6);
     casympt2->SetLineColor(3);
-    /*casympt2->Fit("pol4");
-      TF1 *f2 = casympt2->GetFunction("pol4");*/
-    //TF1 *f2 = new TF1("f2", "[0]+[1]*pow(x,[2])", 40, 180);
     TF1 *f2 = new TF1("f2", "1 - [0]/pow(x,[1])", 40, 180);
     f2->SetLineColor(3);
     casympt2->Fit("f2", "R");
@@ -466,9 +459,6 @@ void ntuple_maker() {
     casympt3->GetYaxis()->SetRangeUser(0.7, 1.3);
     casympt3->SetMarkerStyle(6);
     casympt3->SetLineColor(4);
-    /*casympt3->Fit("pol4");
-      TF1 *f3 = casympt3->GetFunction("pol4");*/
-    //TF1 *f3 = new TF1("f3", "[0]+[1]*pow(x,[2])", 40, 180);
     TF1 *f3 = new TF1("f3", "1 - [0]/pow(x,[1])", 40, 180);
     f3->SetLineColor(4);
     casympt3->Fit("f3", "R");
@@ -489,9 +479,6 @@ void ntuple_maker() {
     casympt4->GetYaxis()->SetRangeUser(0.7, 1.3);
     casympt4->SetMarkerStyle(6);
     casympt4->SetLineColor(9);
-    /*casympt4->Fit("pol4");
-      TF1 *f4 = casympt4->GetFunction("pol4");*/
-    //TF1 *f4 = new TF1("f4", "[0]+[1]*pow(x,[2])", 40, 180);
     TF1 *f4 = new TF1("f4", "1 - [0]/pow(x,[1])", 40, 180);
     f4->SetLineColor(9);
     casympt4->Fit("f4", "R");
@@ -512,9 +499,6 @@ void ntuple_maker() {
     casympt5->GetYaxis()->SetRangeUser(0.7, 1.3);
     casympt5->SetMarkerStyle(6);
     casympt5->SetLineColor(6);
-    /*casympt5->Fit("pol4");
-      TF1 *f5 = casympt5->GetFunction("pol4");*/
-    //TF1 *f5 = new TF1("f5", "[0]+[1]*pow(x,[2])", 40, 180);
     TF1 *f5 = new TF1("f5", "1 - [0]/pow(x,[1])", 40, 180);
     f5->SetLineColor(6);
     casympt5->Fit("f5", "R");
@@ -535,9 +519,6 @@ void ntuple_maker() {
     casympt6->GetYaxis()->SetRangeUser(0.7, 1.3);
     casympt6->SetMarkerStyle(6);
     casympt6->SetLineColor(7);
-    /*casympt6->Fit("pol4");
-      TF1 *f6 = casympt6->GetFunction("pol4");*/
-    //TF1 *f6 = new TF1("f6", "[0]+[1]*pow(x,[2])", 40, 180);
     TF1 *f6 = new TF1("f6", "1 - [0]/pow(x,[1])", 40, 180);
     f6->SetLineColor(7);
     casympt6->Fit("f6", "R");
@@ -588,7 +569,6 @@ void ntuple_maker() {
     casympt4->Draw("P");
     casympt5->Draw("P");
     casympt6->Draw("P");
-    //canvaspt7->SetTitle("p_{T} Dependent Correction");
     TLegend *legend8 = new TLegend(0.4, 0.6, 0.89, 0.89);
     legend8->AddEntry((TObject*)0, Form("ak%iPFJetAnalyzer", radius), "");
     legend8->AddEntry(casympt0, "0.000 < |#eta| < 3.139", "p");
@@ -632,7 +612,7 @@ void ntuple_maker() {
       cout << "---------------------------------------------------------------------------------------------------------------------------------------" << endl;
     }
     cout << endl << endl;
-  }//END RADIUS LOOP
+  } //END RADIUS LOOP (MISMATCHED PARENTHESES?)
 
 
 
@@ -777,40 +757,39 @@ void ntuple_maker() {
 	  abseta = fabs(j_eta[j]);
 
 	  if (abseta < 0.522) {
-	    a = 0.00172601;
-	    b = -0.0632805;
+	    a =   param_array[radius_counter][1][0];
+	    b =   param_array[radius_counter][1][1];
 	  }
 	  if (abseta > 0.522 && abseta < 1.044) {
-	    a = -0.00172674;
-	    b = -0.229084;
+	    a =   param_array[radius_counter][2][0];
+	    b =   param_array[radius_counter][2][1];
 	  }
 	  if (abseta > 1.044 && abseta < 1.566) {
-	    a = -0.0200690;
-	    b = 0.456207;
+	    a =   param_array[radius_counter][3][0];
+	    b =   param_array[radius_counter][3][1];
 	  }
 	  if (abseta > 1.566 && abseta < 2.043) {
-	    a = -0.117306;
-	    b = 0.269872;
+	    a =   param_array[radius_counter][4][0];
+	    b =   param_array[radius_counter][4][1];
 	  }
 	  if (abseta > 2.043 && abseta < 2.500) {
-	    a = -0.100733;
-	    b = 0.130209;
+	    a =   param_array[radius_counter][5][0];
+	    b =   param_array[radius_counter][5][1];
 	  }
 	  if (abseta > 2.500 && abseta < 3.139) {
-	    a = -6.10816;
-	    b = 0.931953;
+	    a =   param_array[radius_counter][6][0];
+	    b =   param_array[radius_counter][6][1];
 	  }
-	  corr_pt_ResJEC = (1 - a/pow(j_pt[j],b))*j_pt[j];
+	  corr_pt_ResJEC[j] = (1 - a/pow(j_pt[j],b))*j_pt[j];
 	}//END JET LOOP
 	akt->Fill();
       }//END RADIUS LOOP
       akt->Write();
       
-    } //END EVENT LOOP
+    } //END EVENT LOOP (MISMATCHED PARENTHESES?)
   } //END INPUT FILE LOOP
-      timer.Stop();
-      cout << "End of Macro Reached" << endl;
-      cout << "CPU Time (min)  : " << timer.CpuTime() << endl;
-      cout << "Real Time (min) : " << timer.RealTime() << endl;
-}//END OF PROGRAM
-
+  timer.Stop();
+  cout << "End of Macro Reached" << endl;
+  cout << "CPU Time (sec)  : " << timer.CpuTime() << endl;
+  cout << "Real Time (sec) : " << timer.RealTime() << endl;
+}//END OF PROGRAM (MISMATCHED PARENTHESES?)

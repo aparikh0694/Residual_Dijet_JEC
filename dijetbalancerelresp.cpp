@@ -6,12 +6,14 @@ void dijetbalancerelresp()	{
   for (int radius_counter = 0; radius_counter < number_of_radii; radius_counter++) { //RADIUS LOOP
     radius = radius_array[radius_counter];
     for (int filecounter = 0; filecounter < 5; filecounter++) { //FILE LOOP	
-	
+//TFile *pt = TFile::Open("HiForest_pp_data_test.root");
+//if (pt->IsOpen()) pt->ls();
+//TFile *outf = new TFile(Form("ak%iPFJetAnalyzer/outputrelresp.root",radius),"recreate");
       //OPEN FILE
       if (filecounter == 0) {
-	TFile *pt = TFile::Open("/afs/cern.ch/work/a/aparikh/public/PP2013_HiForest_PromptReco_JSon_Jet40Jet60_ppTrack_forestv84.root"); // 40 TO 80 PT AVERAGE
+	      TFile *pt = TFile::Open("/afs/cern.ch/work/a/aparikh/public/PP2013_HiForest_PromptReco_JSon_Jet40Jet60_ppTrack_forestv84.root"); // 40 TO 80 PT AVERAGE
         if (pt->IsOpen()) pt->ls();
-	TFile *outf = new TFile(Form("ak%iPFJetAnalyzer/outputrelresp1234.root",radius), "recreate"); // 40 TO 60 PT AVERAGE
+	      TFile *outf = new TFile(Form("ak%iPFJetAnalyzer/outputrelresp1234.root",radius), "recreate"); // 40 TO 60 PT AVERAGE
         cout << "File 1 Opened Successfully" << endl;
       }
       if (filecounter == 1) {
@@ -125,7 +127,7 @@ void dijetbalancerelresp()	{
       int nEvents = ak3t->GetEntries();
       cout << "Radius = " << radius << endl;
       cout << nEvents << endl;
-      //nEvents = 1000;
+      nEvents = 10000;
       for (int i = 0; i < nEvents; i++) { //GETS EVENTS	
 	
 	ak3t->GetEntry(i);
@@ -308,6 +310,6 @@ void dijetbalancerelresp()	{
   } //END OF RADIUS LOOP
   timer.Stop();
   cout << "End of Macro Reached" << endl;
-  cout << "CPU Time (min)  : " << timer.CpuTime() << endl;
-  cout << "Real Time (min) : " << timer.RealTime() << endl;
+  cout << "CPU Time (sec)  : " << timer.CpuTime() << endl;
+  cout << "Real Time (sec) : " << timer.RealTime() << endl;
 }

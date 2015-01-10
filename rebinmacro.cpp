@@ -136,6 +136,6 @@ void rebinmacro() {
   } //END RADIUS LOOP
   timer.Stop();
   cout << "End of Macro Reached" << endl;
-  cout << "CPU Time (min)  : " << timer.CpuTime() << endl;
-  cout << "Real Time (min) : " << timer.RealTime() << endl;
+  cout << "CPU Time (sec)  : " << timer.CpuTime() << endl;
+  cout << "Real Time (sec) : " << timer.RealTime() << endl;
 }

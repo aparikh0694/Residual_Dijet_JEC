@@ -92,10 +92,10 @@ void compare_ntuple() {
   jet80->Project("htest_ntupleb","photonMax","abs(jteta)<2&&hlt40d&&jtpt>50");
   htest_forestb->Print("base");
   htest_ntupleb->Print("base");
-  cout << endl << endl << endl << endl << endl << endl << endl << endl
+  cout << endl << endl << endl << endl << endl << endl << endl << endl;
   } //END RADIUS LOOP
   timer.Stop();
   cout << "End of Macro Reached" << endl;
-  cout << "CPU Time (min)  : " << timer.CpuTime() << endl;
-  cout << "Real Time (min) : " << timer.RealTime() << endl;
+  cout << "CPU Time (sec)  : " << timer.CpuTime() << endl;
+  cout << "Real Time (sec) : " << timer.RealTime() << endl;
 }

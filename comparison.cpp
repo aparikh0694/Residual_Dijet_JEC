@@ -35,7 +35,7 @@ void comparison() {
   Int_t hlt40 = 0;
 
   float abseta = 0;//THIS TFILE OPEN MIGHT HAVE TO CHANGE DEPENDING ON THE CONE SIZE USED???
-  TFile *etacorr = TFile::Open("/afs/cern.ch/user/a/aparikh/CMSSW_5_3_8_HI_patch2/src/Residual_Dijet_JEC_Analysis/Casym_pp_double_hcalbins_algo_ak3PF_pt100_140_jet80_alphahigh_20_phicut250.root");
+  TFile *etacorr = TFile::Open("/afs/cern.ch/user/a/aparikh/ResJEC/CMSSW_5_3_8_HI_patch2/src/Dijet_JEC_Analysis/Casym_pp_double_hcalbins_algo_ak3PF_pt100_140_jet80_alphahigh_20_phicut250.root");
   TH1D *c_eta = (TH1D*)etacorr->Get("C_asym");
   float bins = c_eta->GetNbinsX();
   int count;
@@ -83,7 +83,7 @@ void comparison() {
   float ratio3 = 0;
   float difference = 0;
   cout << nEvents << endl;
-  //nEvents = 100;
+  nEvents = 100;
   for (int i = 0; i < nEvents; i++) {
     ak3t->GetEntry(i);
     hlt->GetEntry(i);
@@ -207,7 +207,7 @@ void comparison() {
   ratio3 = 0;
   difference = 0;
   cout << nEvents << endl;
-  //nEvents = 100;
+  nEvents = 100;
   for (int i = 0; i < nEvents; i++) {
     ak3t->GetEntry(i);
     hlt->GetEntry(i);
@@ -345,7 +345,7 @@ void comparison() {
   ratio3 = 0;
   difference = 0;
   cout << nEventsd << endl;
-  //nEvents = 100;
+  nEventsd = 100;
   for (int i = 0; i < nEventsd; i++) {
     ak3td->GetEntry(i);
     hltd->GetEntry(i);
@@ -630,6 +630,6 @@ void comparison() {
   newfile->Close();
   timer.Stop();
   cout << "End of Macro Reached" << endl;
-  cout << "CPU Time (min)  : " << timer.CpuTime() << endl;
-  cout << "Real Time (min) : " << timer.RealTime() << endl;
+  cout << "CPU Time (sec)  : " << timer.CpuTime() << endl;
+  cout << "Real Time (sec) : " << timer.RealTime() << endl;
 }

@@ -54,7 +54,7 @@ void make_ntuple() {
   Int_t hlt60 = 0;
   Int_t hlt40 = 0;
   //THIS INPUT FILE MAY HAVE TO CHANGE WITH CONE SIZE???
-  TFile *etacorr = TFile::Open("/afs/cern.ch/user/a/aparikh/CMSSW_5_3_8_HI_patch2/src/Modified/Casym_pp_double_hcalbins_algo_ak3PF_pt100_140_jet80_alphahigh_20_phicut250.root");
+  TFile *etacorr = TFile::Open("/afs/cern.ch/user/a/aparikh/ResJEC/CMSSW_5_3_8_HI_patch2/src/Dijet_JEC_Analysis/Casym_pp_double_hcalbins_algo_ak3PF_pt100_140_jet80_alphahigh_20_phicut250.root");
   TH1D *c_eta = (TH1D*)etacorr->Get("C_asym");
   float bins = c_eta->GetNbinsX();
   int count;
@@ -135,7 +135,7 @@ void make_ntuple() {
   float difference = 0;
   float abseta = 0;
   cout << nEvents << endl;
-  //nEvents = 100;
+  nEvents = 100;
   newfile->cd();
   for (int i = 0; i < nEvents; i++) {
     ak3t->GetEntry(i);
@@ -312,7 +312,7 @@ void make_ntuple() {
 
   int nEventsd = ak3td->GetEntries();
   cout << nEventsd << endl;
-  //nEventsd = 100;
+  nEventsd = 100;
   newfile->cd();
   for (int i = 0; i < nEventsd; i++) {
     ak3td->GetEntry(i);
@@ -402,7 +402,7 @@ void make_ntuple() {
 
   timer.Stop();
   cout << "End of Macro Reached" << endl;
-  cout << "CPU Time (min)  : " << timer.CpuTime() << endl;
-  cout << "Real Time (min) : " << timer.RealTime() << endl;
+  cout << "CPU Time (sec)  : " << timer.CpuTime() << endl;
+  cout << "Real Time (sec) : " << timer.RealTime() << endl;
 }
 

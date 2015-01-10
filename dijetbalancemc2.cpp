@@ -131,7 +131,7 @@ void dijetbalancemc2()	{
       int nEvents = ak3t->GetEntries();
       cout << "Radius = " << radius << endl;
       cout << nEvents << endl; 
-      //nEvents = 1000;
+      nEvents = 10000;
       for (int i = 0; i < nEvents; i++) { //GETS EVENTS	
 			
 	ak3t->GetEntry(i);
@@ -328,6 +328,6 @@ void dijetbalancemc2()	{
   } //END RADIUS LOOP
   timer.Stop();
   cout << "End of Macro Reached" << endl;
-  cout << "CPU Time (min)  : " << timer.CpuTime() << endl;
-  cout << "Real Time (min) : " << timer.RealTime() << endl;
+  cout << "CPU Time (sec)  : " << timer.CpuTime() << endl;
+  cout << "Real Time (sec) : " << timer.RealTime() << endl;
 }

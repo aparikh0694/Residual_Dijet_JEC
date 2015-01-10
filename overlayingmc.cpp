@@ -68,7 +68,7 @@ void overlayingmc() {
 	TFile *myfile = new TFile(Form("ak%iPFJetAnalyzer/overlay.root",radius), "Recreate"); // 100 TO 140 PT AVERAGE
       }
       if (filecounter == 4) {
-	TFile *montecarlo = new TFile(Form("ak%iPFJetAnalyer/rebinoutmc12.root",radius), "Read"); // 140 TO 200 PT AVERAGE
+	TFile *montecarlo = new TFile(Form("ak%iPFJetAnalyzer/rebinoutmc12.root",radius), "Read"); // 140 TO 200 PT AVERAGE
 	if (montecarlo->IsOpen()) printf("MonteCarlo File Opened Successfully.\n");
 	montecarlo->ls();
 	TGraph *balancemc = (TGraph *)montecarlo->Get("Graph;1");
@@ -163,6 +163,6 @@ void overlayingmc() {
   }//END RADIUS LOOP
   timer.Stop();
   cout << "End of Macro Reached" << endl;
-  cout << "CPU Time (min)  : " << timer.CpuTime() << endl;
-  cout << "Real Time (min) : " << timer.RealTime() << endl;
+  cout << "CPU Time (sec)  : " << timer.CpuTime() << endl;
+  cout << "Real Time (sec) : " << timer.RealTime() << endl;
 }
